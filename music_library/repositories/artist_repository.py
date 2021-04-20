@@ -16,7 +16,24 @@ def delete_all():
     run_sql(sql)
 
 def select(id):
-    pass
+    artist = None
+    sql = "SELECT * FROM artists WHERE id = %s"
+    values = [id]
+    result = run_sql(sql, values)[0]
+
+    if result is not None:
+        artist = Artist(result['first_name'], result['last_name'], result['id'])
+    return artist
 
 def albums(artist):
-    pass
+    albums = []
+
+    sql  = "SELECT * FROM albums WHERE artist_id = %s"
+    values = [artist.id]
+    results = run_sql(sql, values)
+
+    for row in results:
+        album = Album(row['title'], artist, row['genre'], row['id'])
+        albums.append(album)
+
+    return albums
